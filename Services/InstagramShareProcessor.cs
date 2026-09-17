@@ -36,6 +36,14 @@ public class InstagramShareProcessor
             {
                 await ProcessMessagingEventAsync(messagingEvent, ct);
             }
+
+            foreach (var change in entry.Changes)
+            {
+                if (change.Field == "messages" && change.Value is not null)
+                {
+                    await ProcessMessagingEventAsync(change.Value, ct);
+                }
+            }
         }
     }
 
