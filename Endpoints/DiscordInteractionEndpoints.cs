@@ -27,7 +27,11 @@ public static class DiscordInteractionEndpoints
 
             if (!DiscordSignatureVerifier.Verify(bodyBytes, signature, timestamp, options.Value.PublicKey))
             {
-                logger.LogWarning("Rejected Discord interaction with invalid Ed25519 signature.");
+                logger.LogWarning(
+                    "Rejected Discord interaction with invalid Ed25519 signature. " +
+                    "bodyLen={BodyLen} sigLen={SigLen} sigPresent={SigPresent} tsPresent={TsPresent} ts={Timestamp} configuredKeyLen={KeyLen}",
+                    bodyBytes.Length, signature.Length, !string.IsNullOrEmpty(signature), !string.IsNullOrEmpty(timestamp),
+                    timestamp, options.Value.PublicKey.Length);
                 return Results.Unauthorized();
             }
 
