@@ -55,4 +55,45 @@ public class InstagramGraphClient
             return null;
         }
     }
+
+    /// <summary>
+    /// Resolves a stable Instagram permalink for a media ID, used for "ig_post" attachments
+    /// whose webhook payload only includes an expiring CDN URL, not a permalink.
+    /// </summary>
+    public async Task<string?> TryResolveMediaPermalinkAsync(string mediaId, CancellationToken ct)
+    {
+        if (string.IsNullOrEmpty(_options.AccessToken))
+        {
+            _logger.LogWarning("Instagram:AccessToken is not configured; cannot resolve permalink for media {MediaId}.", mediaId);
+            return null;
+        }
+
+        try
+        {
+            var url = $"https://graph.instagram.com/{Uri.EscapeDataString(mediaId)}" +
+                      $"?fields=permalink&access_token={Uri.EscapeDataString(_options.AccessToken)}";
+
+            using var response = await _httpClient.GetAsync(url, ct);
+            if (!response.IsSuccessStatusCode)
+            {
+                _logger.LogWarning("Instagram Graph API returned {StatusCode} while resolving permalink for media {MediaId}.",
+                    (int)response.StatusCode, mediaId);
+                return null;
+            }
+
+            await using var stream = await response.Content.ReadAsStreamAsync(ct);
+            using var doc = await JsonDocument.ParseAsync(stream, cancellationToken: ct);
+            if (doc.RootElement.TryGetProperty("permalink", out var permalinkElement))
+            {
+                return permalinkElement.GetString();
+            }
+
+            return null;
+        }
+        catch (Exception ex) when (ex is HttpRequestException or JsonException or TaskCanceledException)
+        {
+            _logger.LogWarning(ex, "Failed to resolve Instagram permalink for media {MediaId}.", mediaId);
+            return null;
+        }
+    }
 }

@@ -56,7 +56,7 @@ public class InstagramShareProcessor
             return;
         }
 
-        var links = CollectLinks(message);
+        var links = await CollectLinksAsync(message, ct);
         if (links.Count == 0)
         {
             // Plain text DM with no recognized link, or an attachment type we don't handle
@@ -106,7 +106,7 @@ public class InstagramShareProcessor
         return resolved;
     }
 
-    private static List<SharedLink> CollectLinks(InstagramMessage message)
+    private async Task<List<SharedLink>> CollectLinksAsync(InstagramMessage message, CancellationToken ct)
     {
         var links = new List<SharedLink>();
 
@@ -118,6 +118,14 @@ public class InstagramShareProcessor
                 {
                     links.Add(new SharedLink(attachment.Payload.Url, LinkSource.Instagram));
                 }
+                else if (attachment.Type == "ig_post")
+                {
+                    var url = await ResolveIgPostUrlAsync(attachment.Payload, ct);
+                    if (!string.IsNullOrEmpty(url))
+                    {
+                        links.Add(new SharedLink(url, LinkSource.Instagram));
+                    }
+                }
             }
         }
 
@@ -127,6 +135,26 @@ public class InstagramShareProcessor
         }
 
         return links;
+    }
+
+    private async Task<string?> ResolveIgPostUrlAsync(InstagramAttachmentPayload? payload, CancellationToken ct)
+    {
+        if (payload is null)
+        {
+            return null;
+        }
+
+        if (!string.IsNullOrEmpty(payload.IgPostMediaId))
+        {
+            var permalink = await _graphClient.TryResolveMediaPermalinkAsync(payload.IgPostMediaId, ct);
+            if (!string.IsNullOrEmpty(permalink))
+            {
+                return permalink;
+            }
+        }
+
+        // Fall back to the expiring CDN URL rather than dropping the share entirely.
+        return payload.Url;
     }
 
     private static string ComposeMessage(SharedLink link, string? username, UsernameClaim? claim)

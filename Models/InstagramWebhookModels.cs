@@ -63,5 +63,13 @@ public class InstagramAttachment
 
 public class InstagramAttachmentPayload
 {
+    // Present on "share"/"ig_reel" attachments: a stable Instagram permalink.
     public string? Url { get; set; }
+
+    // Present on "ig_post" (shared feed image/video) attachments instead of a permalink -
+    // the media's ID, used to resolve a real permalink via the Graph API. The "Url" field on
+    // this attachment type is a signed, expiring CDN link straight to the media file, not a
+    // permalink, so it's only used as a fallback if permalink resolution fails.
+    [JsonPropertyName("ig_post_media_id")]
+    public string? IgPostMediaId { get; set; }
 }
