@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Privacy Policy - Discord Meme Bot</title>
+<style>
+  body { font-family: -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; max-width: 680px; margin: 40px auto; padding: 0 20px; line-height: 1.6; color: #1a1a1a; }
+  h1 { font-size: 1.6em; }
+  h2 { font-size: 1.15em; margin-top: 1.8em; }
+  code { background: #f2f2f2; padding: 2px 5px; border-radius: 3px; font-size: 0.9em; }
+  footer { margin-top: 3em; font-size: 0.9em; color: #555; }
+</style>
+</head>
+<body>
+
+<h1>Privacy Policy - Discord Meme Bot</h1>
+<p><em>Last updated: September 18, 2026</em></p>
+
+<p>
+  Discord Meme Bot is a personal, single-user automation tool. It forwards
+  posts/reels shared to a specific Instagram account via Direct Message (or
+  TikTok/X links pasted in a DM) to a private Discord channel. It is not a
+  public product, is not distributed to other users, and does not collect
+  data from the general public.
+</p>
+
+<h2>What data is collected</h2>
+<ul>
+  <li><strong>Instagram-scoped sender ID</strong> of the account that sent a message, as provided by Meta's webhook.</li>
+  <li><strong>Instagram username</strong>, resolved via the Instagram Graph API for sender IDs that aren't already recognized.</li>
+  <li><strong>Message content</strong> limited to shared post/reel URLs and any TikTok/X links contained in the message text - not general message content unrelated to link sharing.</li>
+  <li><strong>Discord user ID and display name</strong>, only for people who voluntarily use the <code>/claim</code> command to associate their Discord identity with an Instagram username.</li>
+</ul>
+
+<h2>How this data is used</h2>
+<p>
+  This data is used solely to decide whether a shared link should be
+  forwarded to the operator's private Discord channel, and to attribute a
+  forwarded link to a Discord user when a matching claim exists. It is not
+  used for advertising, profiling, or analytics, and is not sold or shared
+  with any third party.
+</p>
+
+<h2>Where this data is stored</h2>
+<p>
+  All data is stored locally, as plain JSON files, on infrastructure
+  controlled by the developer. It is not stored in any third-party database
+  or analytics service. It persists until manually removed by the developer.
+</p>
+
+<h2>Third parties involved</h2>
+<p>
+  This tool communicates only with the Meta/Instagram Graph API (to receive
+  webhook events and resolve usernames) and the Discord API (to post
+  messages and handle slash commands). No other third party has access to
+  this data.
+</p>
+
+<h2>Data deletion</h2>
+<p>
+  Anyone whose Instagram sender ID, username, or Discord claim is stored by
+  this tool may request its removal by contacting the developer at the email
+  address below.
+</p>
+
+<h2>Children's privacy</h2>
+<p>This tool is not directed at, and does not knowingly collect data from, children.</p>
+
+<h2>Changes to this policy</h2>
+<p>This page may be updated occasionally to reflect changes in how the tool operates. The "Last updated" date above will reflect the most recent revision.</p>
+
+<h2>Contact</h2>
+<p>Questions or deletion requests: <a href="mailto:joshuamoo2@gmail.com">joshuamoo2@gmail.com</a></p>
+
+<footer>
+  Discord Meme Bot - a personal Instagram-to-Discord link forwarder.
+</footer>
+
+</body>
+</html>
